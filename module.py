@@ -7,7 +7,7 @@ import math
 # import numpy as np
 # from fastprogress import progress_bar
 # from utils import *
-# from modules import UNet_conditional, EMA
+
 
 class convNet(nn.Module):
   def __init__(self,in_channels,out_channels,mid_channels=None,residual=None):
@@ -28,7 +28,7 @@ class convNet(nn.Module):
 
         
     )
-    def forward(tensor):
+  def forward(self,tensor):
       out=self.conv1(tensor)
       if self.residual:
         out_inter=(tensor+out)
