@@ -1,6 +1,6 @@
 import torch
 import math
-from module import unet_cond
+from module import UNetDDPM
 import argparse, logging, copy
 from types import SimpleNamespace
 from contextlib import nullcontext
