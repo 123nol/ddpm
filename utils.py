@@ -49,6 +49,18 @@ def get_cifar(cifar100=False, img_size=64):
         get_kaggle_dataset("datasets/cifar10_64", "joaopauloschuler/cifar10-64x64-resized-via-cai-super-resolution")
         return Path("datasets/cifar10_64/cifar10-64")
 
+
+def get_alphabet(args):
+    get_kaggle_dataset("alphabet", "thomasqazwsxedc/alphabet-characters-fonts-dataset")
+    train_transforms = T.Compose([
+        T.Grayscale(),
+        T.ToTensor(),])
+    train_dataset = torchvision.datasets.ImageFolder(root="./alphabet/Images/Images/", transform=train_transforms)
+    if args.slice_size>1:
+        train_dataset = torch.utils.data.Subset(train_dataset, indices=range(0, len(train_dataset), args.slice_size))
+    train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
+    return train_dataloader, None
+
 def get_kaggle_dataset(dataset_path, # Local path to download dataset to
                 dataset_slug, # Dataset slug (ie "zillow/zecon")
                 unzip=True, # Should it unzip after downloading?
