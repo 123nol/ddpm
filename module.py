@@ -129,7 +129,7 @@ class Up(nn.Module):
 # ---------- UNet
 
 class UNetDDPM(nn.Module):
-    def __init__(self, in_channels=3, base=64, time_dim=256, num_classes=None, attn_levels=(1,2)):
+    def __init__(self, in_channels=1, base=32, time_dim=256, num_classes=None, attn_levels=(1,2)):
         """
         attn_levels: which down/up index levels include attention (0=highest resolution)
         """
@@ -156,9 +156,9 @@ class UNetDDPM(nn.Module):
         # Up path (mirror; pay attention to skip channels)
         self.up1  = Up(in_ch=base*8, skip_ch=base*4, out_ch=base*4, time_dim=time_dim)  # with skip from down3
         self.att1u = SelfAttention2D(base*4, residual=True) if 2 in attn_levels else nn.Identity()
-        self.up2  = Up(in_ch=base*4, skip_ch=base*2, out_ch=base*2, time_dim=time_dim)  # with skip from down2
+        self.up2  = Up(in_ch=base*4, skip_ch=base*4, out_ch=base*2, time_dim=time_dim)  # with skip from down2, CORRECTED skip_ch
         self.att2u = SelfAttention2D(base*2, residual=True) if 1 in attn_levels else nn.Identity()
-        self.up3  = Up(in_ch=base*2, skip_ch=base,   out_ch=base,   time_dim=time_dim)  # with skip from down1
+        self.up3  = Up(in_ch=base*2, skip_ch=base*2, out_ch=base,   time_dim=time_dim)  # with skip from down1, CORRECTED skip_ch
         self.att3u = SelfAttention2D(base, residual=True) if 0 in attn_levels else nn.Identity()
 
         # Head
@@ -195,3 +195,4 @@ class UNetDDPM(nn.Module):
 
         out = self.head(u3)
         return out
+        
